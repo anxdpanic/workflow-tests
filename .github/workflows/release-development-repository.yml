@@ -1,6 +1,12 @@
 name: Generate Development Repository
 on:
   workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Is this a pre-release? [true|false]'
+        required: false
+        default: 'true'
+
   push:
     tags:
       - 'v*'
@@ -22,7 +28,10 @@ jobs:
         id: release
         run: |
           version=${GITHUB_REF/refs\/tags\//}
-          if [[ $version == *[-+]@(alpha|beta|dev)*([.0-9a-z]) ]] ;
+          if [[ ! -z ${{ github.event.inputs.prerelease }} ]] ;
+          then
+            echo "prelease=${{ github.event.inputs.prerelease }}" >> $GITHUB_OUTPUT
+          elif [[ $version == *[-+]@(alpha|beta|dev)*([.0-9a-z]) ]] ;
           then
             echo "pre-release=true" >> $GITHUB_OUTPUT
           else
@@ -76,6 +85,7 @@ jobs:
           cd /root/anxdpanic/kodi/youtube/; \
           mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_official ./official_testing/repository.yt.testing_official; \
           mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_unofficial ./unofficial_testing/repository.yt.testing_unofficial; \
+          mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_unofficial ./unofficial/repository.yt.unofficial; \
           bye \
           "
 
@@ -87,14 +97,16 @@ jobs:
 
       - name: Generate Repository
         run: |
-          python .prepare_repository.py
+          python .prepare_repository.py --prerelease=${{ steps.release.outputs.pre-release }}
 
       - name: List Generated Repository for Debug
         run: |
           ls -la ./repository/official_testing
           ls -la ./repository/official_testing/zips
           ls -la ./repository/unofficial_testing          
-          ls -la ./repository/unofficial_testing/zips
+          ls -la ./repository/unofficial_testing/zips          
+          ls -la ./repository/unofficial       
+          ls -la ./repository/unofficial/zips
 
       - name: Mirror Repository to FTP
         run: |
@@ -106,5 +118,6 @@ jobs:
           lcd repository/; \
           mirror --verbose --use-pget-n=8 -c --reverse --verbose official_testing official_testing; \
           mirror --verbose --use-pget-n=8 -c --reverse --verbose unofficial_testing unofficial_testing; \
+          mirror --verbose --use-pget-n=8 -c --reverse --verbose unofficial unofficial; \
           bye \
           "

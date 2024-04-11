@@ -19,6 +19,7 @@ of your repository file is set to 'true'.
 
 Please bump __revision__ one decimal point and add your name to credits when making changes
 """
+import sys
 
 from lxml import etree
 import hashlib
@@ -430,6 +431,9 @@ if __name__ == '__main__':
     SOURCE_PATH_UNOFFICIAL = CONFIG.get('path', {}).get('source-unofficial', '')
     REPOSITORY_PATH_UNOFFICIAL = CONFIG.get('path', {}).get('repository-unofficial', '')
     ZIPS_PATH_UNOFFICIAL = os.path.join(REPOSITORY_PATH_UNOFFICIAL, 'zips')
+    SOURCE_PATH_UNOFFICIAL_TESTING = CONFIG.get('path', {}).get('source-unofficial-testing', '')
+    REPOSITORY_PATH_UNOFFICIAL_TESTING = CONFIG.get('path', {}).get('repository-unofficial-testing', '')
+    ZIPS_PATH_UNOFFICIAL_TESTING = os.path.join(REPOSITORY_PATH_UNOFFICIAL_TESTING, 'zips')
 
     print(__script__)
     print('Version: v' + str(__revision__))
@@ -442,6 +446,9 @@ if __name__ == '__main__':
     print('    Source:     ' + SOURCE_PATH)
     print('    Repository: ' + REPOSITORY_PATH)
     print('    Zips:       ' + ZIPS_PATH)
+    print('    Unofficial Development Source:     ' + SOURCE_PATH_UNOFFICIAL)
+    print('    Unofficial Development Repository: ' + REPOSITORY_PATH_UNOFFICIAL)
+    print('    Unofficial Development Zips:       ' + ZIPS_PATH_UNOFFICIAL)
     print('    Unofficial Source:     ' + SOURCE_PATH_UNOFFICIAL)
     print('    Unofficial Repository: ' + REPOSITORY_PATH_UNOFFICIAL)
     print('    Unofficial Zips:       ' + ZIPS_PATH_UNOFFICIAL)
@@ -452,12 +459,25 @@ if __name__ == '__main__':
 
     print(' ')
 
+    print('Generating official testing repository')
     Compressor()
     Generator()
 
-    SOURCE_PATH = SOURCE_PATH_UNOFFICIAL
-    REPOSITORY_PATH = REPOSITORY_PATH_UNOFFICIAL
-    ZIPS_PATH = ZIPS_PATH_UNOFFICIAL
+    if os.path.isdir(SOURCE_PATH_UNOFFICIAL_TESTING):
+        print('Generating unofficial testing repository')
+        SOURCE_PATH = SOURCE_PATH_UNOFFICIAL_TESTING
+        REPOSITORY_PATH = REPOSITORY_PATH_UNOFFICIAL_TESTING
+        ZIPS_PATH = ZIPS_PATH_UNOFFICIAL_TESTING
 
-    Compressor()
-    Generator()
+        Compressor()
+        Generator()
+
+    if len(sys.argv) > 1 and sys.argv[1] == '--prerelease=false':
+        if os.path.isdir(SOURCE_PATH_UNOFFICIAL):
+            print('Generating unofficial repository')
+            SOURCE_PATH = SOURCE_PATH_UNOFFICIAL
+            REPOSITORY_PATH = REPOSITORY_PATH_UNOFFICIAL
+            ZIPS_PATH = ZIPS_PATH_UNOFFICIAL
+
+            Compressor()
+            Generator()
