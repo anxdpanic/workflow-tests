@@ -58,6 +58,11 @@ jobs:
         with:
           path: ${{ github.event.repository.name }}
 
+      - name: Make Repository Add-on Directories
+        run: |
+          mkdir ./official/repository.yt.testing_official
+          mkdir ./unofficial/repository.yt.testing_unofficial
+
       - name: Download Official Repository Add-on Files from FTP
         uses: pressidium/lftp-mirror-action@v1
         with:
