@@ -1,4 +1,3 @@
-# Based on https://github.com/im85288/service.upnext/blob/master/.github/workflows/release.yml
 name: Generate Development Repository
 on:
   workflow_dispatch:
@@ -8,6 +7,8 @@ on:
       - '*-dev'
 
 # ${{ github.event.repository.name }}
+# ${{ steps.release.outputs.pre-release }}
+
 jobs:
   repo-gen:
     if: github.repository == 'anxdpanic/plugin.video.youtube' || github.event_name == 'workflow_dispatch'
@@ -17,6 +18,17 @@ jobs:
       contents: write
 
     steps:
+      - name: Release Status
+        id: release
+        run: |
+          version=${GITHUB_REF/refs\/tags\//}
+          if [[ $version == *[-+]@(alpha|beta|dev)*([.0-9a-z]) ]] ;
+          then
+            echo "pre-release=true" >> $GITHUB_OUTPUT
+          else
+            echo "pre-release=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -47,6 +59,17 @@ jobs:
         with:
           path: ${{ github.event.repository.name }}
 
+      - name: Download Repository Add-on Files from FTP
+        uses: joutvhu/ftp-transfer@v1
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          port: ${{ secrets.FTP_PORT }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          commands: |
+            get /root/anxdpanic/kodi/youtube/repository.yt.testing_official ./official/repository.yt.testing_official
+            get /root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial ./unofficial/repository.yt.testing_official
+
       # cp  ./official/plugin.video.youtube/.scripts/* .
       - name: Copy Generator Script
         run: |
@@ -60,6 +83,6 @@ jobs:
       - name: List Generated Repository for Debug
         run: |
           ls -la ./repository/official
-          ls -la ./repository/unofficial          
           ls -la ./repository/official/zips
+          ls -la ./repository/unofficial          
           ls -la ./repository/unofficial/zips
