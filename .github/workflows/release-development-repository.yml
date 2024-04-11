@@ -12,9 +12,6 @@ on:
       - 'v*'
       - '*-dev'
 
-# ${{ github.event.repository.name }}
-# ${{ steps.release.outputs.pre-release }}
-
 jobs:
   repo-gen:
     if: github.repository == 'anxdpanic/plugin.video.youtube' || github.event_name == 'workflow_dispatch'
@@ -65,6 +62,7 @@ jobs:
           ref: "nexus-unofficial"
 
       - name: Checkout Unofficial Add-on
+        if: steps.release.outputs.pre-release == 'false'
         uses: actions/checkout@v4
         with:
           repository: "anxdpanic/plugin.video.youtube"
@@ -85,6 +83,17 @@ jobs:
           cd /root/anxdpanic/kodi/youtube/; \
           mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_official ./official_testing/repository.yt.testing_official; \
           mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_unofficial ./unofficial_testing/repository.yt.testing_unofficial; \
+          bye \
+          "
+
+      - name: Download Unofficial Repository Add-on Files from FTP
+        if: steps.release.outputs.pre-release == 'false'
+        run: |
+          lftp -c "\
+          set ssl:verify-certificate false; \
+          set sftp:auto-confirm yes; \
+          open ${{ secrets.SFTP }}; \
+          cd /root/anxdpanic/kodi/youtube/; \
           mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_unofficial ./unofficial/repository.yt.unofficial; \
           bye \
           "
@@ -109,6 +118,18 @@ jobs:
           lcd repository/; \
           mirror --verbose --use-pget-n=8 -c --reverse --verbose official_testing official_testing; \
           mirror --verbose --use-pget-n=8 -c --reverse --verbose unofficial_testing unofficial_testing; \
+          bye \
+          "
+
+      - name: Mirror Unofficial Repository to FTP
+        if: steps.release.outputs.pre-release == 'false'
+        run: |
+          lftp -c "\
+          set ssl:verify-certificate false; \
+          set sftp:auto-confirm yes; \
+          open ${{ secrets.SFTP }}; \
+          cd /root/anxdpanic/kodi/youtube/; \
+          lcd repository/; \
           mirror --verbose --use-pget-n=8 -c --reverse --verbose unofficial unofficial; \
           bye \
           "
