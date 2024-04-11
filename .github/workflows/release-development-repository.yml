@@ -62,10 +62,10 @@ jobs:
 
       - name: Download Repository Add-on Files from FTP
         run: |
-          lftp -c "set ssl:verify-certificate false"
-          open -p ${{ secrets.FTP_PORT }} -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }}
-          mirror --verbose --use-pget-n=8 -c --verbose root/anxdpanic/kodi/youtube/repository.yt.testing_official ./official/repository.yt.testing_official
-          mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial ./unofficial/repository.yt.testing_unofficial
+          lftp -c "set ssl:verify-certificate false"; \
+          open -p ${{ secrets.FTP_PORT }} -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }}; \
+          mirror --verbose --use-pget-n=8 -c --verbose root/anxdpanic/kodi/youtube/repository.yt.testing_official ./official/repository.yt.testing_official; \
+          mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial ./unofficial/repository.yt.testing_unofficial; \
           bye
 
       # cp  ./official/plugin.video.youtube/.scripts/* .
