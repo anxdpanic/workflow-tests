@@ -71,11 +71,6 @@ jobs:
           bye \
           "
 
-      - name: Make Repository Add-on Directories
-        run: |
-          mkdir ./official/repository.yt.testing_official
-          mkdir ./unofficial/repository.yt.testing_unofficial
-
       # cp  ./official/plugin.video.youtube/.scripts/* .
       - name: Copy Generator Script
         run: |
