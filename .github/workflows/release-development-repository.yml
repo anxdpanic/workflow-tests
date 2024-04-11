@@ -52,6 +52,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: "anxdpanic/plugin.video.youtube"
+          path: ./unofficial_testing/plugin.video.youtube
+          ref: "nexus-unofficial"
+
+      - name: Checkout Unofficial Add-on
+        uses: actions/checkout@v4
+        with:
+          repository: "anxdpanic/plugin.video.youtube"
           path: ./unofficial/plugin.video.youtube
           ref: "nexus-unofficial"
 
@@ -67,7 +74,7 @@ jobs:
           set sftp:auto-confirm yes; \
           open ${{ secrets.SFTP }}; \
           mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_official ./official/repository.yt.testing_official; \
-          mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial ./unofficial/repository.yt.testing_unofficial; \
+          mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial ./unofficial_testing/repository.yt.testing_unofficial; \
           bye \
           "
 
@@ -85,6 +92,16 @@ jobs:
         run: |
           ls -la ./repository/official
           ls -la ./repository/official/zips
-          ls -la ./official/repository.yt.testing_official
-          ls -la ./repository/unofficial          
-          ls -la ./repository/unofficial/zips
+          ls -la ./repository/unofficial_testing          
+          ls -la ./repository/unofficial_testing/zips
+
+      - name: Mirror Repository to FTP
+        run: |
+          lftp -c "\
+          set ssl:verify-certificate false; \
+          set sftp:auto-confirm yes; \
+          open ${{ secrets.SFTP }}; \
+          mirror --verbose --use-pget-n=8 -c --reverse --verbose /root/anxdpanic/kodi/youtube/official_testing ./repository/official; \
+          mirror --verbose --use-pget-n=8 -c --reverse --verbose /root/anxdpanic/kodi/youtube/unofficial_testing ./repository/unofficial_testing; \
+          bye \
+          "
