@@ -55,7 +55,7 @@ jobs:
       - name: Copy Generator Script
         id: copy-gen-script
         run: |
-          cp  ./${{ github.event.repository.name }}/.scripts/* .
+          cp  ${{ github.event.repository.name }}/.scripts/* .
 
       - name: Setup Python
         uses: actions/setup-python@v5
