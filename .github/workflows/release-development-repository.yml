@@ -58,38 +58,14 @@ jobs:
         with:
           path: ${{ github.event.repository.name }}
 
+      - name: Download Repository Add-on Files from FTP
+        run: |
+          lftp -c "set ssl:verify-certificate false; open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} -p ${{ secrets.FTP_PORT }} ${{ secrets.FTP_SERVER }}; mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_official ./official/repository.yt.testing_official; mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial ./unofficial/repository.yt.testing_unofficial; bye
+
       - name: Make Repository Add-on Directories
         run: |
           mkdir ./official/repository.yt.testing_official
           mkdir ./unofficial/repository.yt.testing_unofficial
-
-      - name: Download Official Repository Add-on Files from FTP
-        uses: pressidium/lftp-mirror-action@v1
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          port: ${{ secrets.FTP_PORT }}
-          user: ${{ secrets.FTP_USERNAME }}
-          pass: ${{ secrets.FTP_PASSWORD }}
-          onlyNewer: false
-          settings: 'sftp:auto-confirm=yes'
-          localDir: './official/repository.yt.testing_official/'
-          remoteDir: '/root/anxdpanic/kodi/youtube/repository.yt.testing_official/'
-          reverse: false
-          options: '--verbose'
-
-      - name: Download Unofficial Repository Add-on Files from FTP
-        uses: pressidium/lftp-mirror-action@v1
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          port: ${{ secrets.FTP_PORT }}
-          user: ${{ secrets.FTP_USERNAME }}
-          pass: ${{ secrets.FTP_PASSWORD }}
-          onlyNewer: false
-          settings: 'sftp:auto-confirm=yes'
-          localDir: './unofficial/repository.yt.testing_unofficial/'
-          remoteDir: '/root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial/'
-          reverse: false
-          options: '--verbose'
 
       # cp  ./official/plugin.video.youtube/.scripts/* .
       - name: Copy Generator Script
