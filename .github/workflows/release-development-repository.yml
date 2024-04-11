@@ -17,6 +17,17 @@ jobs:
       contents: write
 
     steps:
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          python -m pip install --upgrade pip
+          pip install lxml zipfile
+
       - name: Checkout Official Add-on
         uses: actions/checkout@v4
         with:
@@ -36,21 +47,12 @@ jobs:
         with:
           path: ${{ github.event.repository.name }}
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-
       # cp  ./official/plugin.video.youtube/.scripts/* .
       - name: Copy Generator Script
         id: copy-gen-script
         run: |
           cp  ${{ github.event.repository.name }}/.scripts/.prepare_repository.py .
           cp  ${{ github.event.repository.name }}/.scripts/.config.json .
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
 
       - name: Generate Repository
         run: |
