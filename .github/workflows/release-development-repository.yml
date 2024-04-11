@@ -30,7 +30,7 @@ jobs:
           version=${GITHUB_REF/refs\/tags\//}
           if [[ ! -z ${{ github.event.inputs.prerelease }} ]] ;
           then
-            echo "prelease=${{ github.event.inputs.prerelease }}" >> $GITHUB_OUTPUT
+            echo "pre-release=${{ github.event.inputs.prerelease }}" >> $GITHUB_OUTPUT
           elif [[ $version == *[-+]@(alpha|beta|dev)*([.0-9a-z]) ]] ;
           then
             echo "pre-release=true" >> $GITHUB_OUTPUT
@@ -98,15 +98,6 @@ jobs:
       - name: Generate Repository
         run: |
           python .prepare_repository.py --prerelease=${{ steps.release.outputs.pre-release }}
-
-      - name: List Generated Repository for Debug
-        run: |
-          ls -la ./repository/official_testing
-          ls -la ./repository/official_testing/zips
-          ls -la ./repository/unofficial_testing          
-          ls -la ./repository/unofficial_testing/zips          
-          ls -la ./repository/unofficial       
-          ls -la ./repository/unofficial/zips
 
       - name: Mirror Repository to FTP
         run: |
