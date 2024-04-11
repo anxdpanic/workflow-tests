@@ -1,5 +1,5 @@
 # Based on https://github.com/im85288/service.upnext/blob/master/.github/workflows/release.yml
-name: Make Release
+name: Generate Development Repository
 on:
   workflow_dispatch:
   push:
@@ -31,14 +31,14 @@ jobs:
       - name: Checkout Add-on
         uses: actions/checkout@v4
         with:
-          repository: "anxdpanic/youtube"
+          repository: "anxdpanic/plugin.video.youtube"
           path: ./official/plugin.video.youtube
           ref: "master"
 
       - name: Checkout Unofficial Add-on
         uses: actions/checkout@v4
         with:
-          repository: "anxdpanic/youtube"
+          repository: "anxdpanic/plugin.video.youtube"
           path: ./unofficial/plugin.video.youtube
           ref: "nexus-unofficial"
 
