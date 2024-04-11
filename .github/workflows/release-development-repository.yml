@@ -57,5 +57,5 @@ jobs:
       - name: Generate Repository
         run: |
           python .prepare_repository.py
-          ls -la ./official/plugin.video.youtube
-          ls -la ./unofficial/plugin.video.youtube
+          ls -la ./repository/official
+          ls -la ./repository/unofficial

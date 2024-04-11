@@ -109,8 +109,8 @@ class Generator:
             self.generate_md5_file()
 
             # notify user
-            print(' ')
             print('Updated addons xml and addons.xml.md5 files')
+            print(' ')
         else:
             print('Could not find any addons, so script has done nothing.')
 
