@@ -74,7 +74,7 @@ jobs:
           settings: 'sftp:auto-confirm=yes'
           localDir: './official/repository.yt.testing_official'
           remoteDir: '/root/anxdpanic/kodi/youtube/repository.yt.testing_official'
-          reverse: true
+          reverse: false
           options: '--verbose'
 
       - name: Download Unofficial Repository Add-on Files from FTP
@@ -88,7 +88,7 @@ jobs:
           settings: 'sftp:auto-confirm=yes'
           localDir: './unofficial/repository.yt.testing_unofficial'
           remoteDir: '/root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial'
-          reverse: true
+          reverse: false
           options: '--verbose'
 
       # cp  ./official/plugin.video.youtube/.scripts/* .
