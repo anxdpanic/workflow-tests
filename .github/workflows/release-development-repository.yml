@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: "anxdpanic/plugin.video.youtube"
-          path: ./official/plugin.video.youtube
+          path: ./official_testing/plugin.video.youtube
           ref: "master"
 
       - name: Checkout Unofficial Add-on
@@ -74,7 +74,7 @@ jobs:
           set sftp:auto-confirm yes; \
           open ${{ secrets.SFTP }}; \
           cd /root/anxdpanic/kodi/youtube/; \
-          mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_official ./official/repository.yt.testing_official; \
+          mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_official ./official_testing/repository.yt.testing_official; \
           mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_unofficial ./unofficial_testing/repository.yt.testing_unofficial; \
           bye \
           "
@@ -91,8 +91,8 @@ jobs:
 
       - name: List Generated Repository for Debug
         run: |
-          ls -la ./repository/official
-          ls -la ./repository/official/zips
+          ls -la ./repository/official_testing
+          ls -la ./repository/official_testing/zips
           ls -la ./repository/unofficial_testing          
           ls -la ./repository/unofficial_testing/zips
 
@@ -103,7 +103,8 @@ jobs:
           set sftp:auto-confirm yes; \
           open ${{ secrets.SFTP }}; \
           cd /root/anxdpanic/kodi/youtube/; \
-          mirror --verbose --use-pget-n=8 -c --reverse --verbose official_testing ./repository/official; \
-          mirror --verbose --use-pget-n=8 -c --reverse --verbose unofficial_testing ./repository/unofficial_testing; \
+          lcd repository/; \
+          mirror --verbose --use-pget-n=8 -c --reverse --verbose official_testing official_testing; \
+          mirror --verbose --use-pget-n=8 -c --reverse --verbose unofficial_testing unofficial_testing; \
           bye \
           "

@@ -1,9 +1,9 @@
 {
   "compress_addons": true,
   "path": {
-    "source": "./official",
+    "source": "./official_testing",
     "source-unofficial": "./unofficial_testing",
-    "repository": "./repository/official",
+    "repository": "./repository/official_testing",
     "repository-unofficial": "./repository/unofficial_testing"
   },
   "development_versions": true,
