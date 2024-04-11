@@ -72,8 +72,8 @@ jobs:
           pass: ${{ secrets.FTP_PASSWORD }}
           onlyNewer: false
           settings: 'sftp:auto-confirm=yes'
-          localDir: './official/repository.yt.testing_official'
-          remoteDir: ${{ secrets.SOURCE_ROOT }}youtube/repository.yt.testing_official
+          localDir: './official/repository.yt.testing_official/'
+          remoteDir: '/root/anxdpanic/kodi/youtube/repository.yt.testing_official/'
           reverse: false
           options: '--verbose'
 
@@ -86,8 +86,8 @@ jobs:
           pass: ${{ secrets.FTP_PASSWORD }}
           onlyNewer: false
           settings: 'sftp:auto-confirm=yes'
-          localDir: './unofficial/repository.yt.testing_unofficial'
-          remoteDir: ${{ secrets.SOURCE_ROOT }}youtube/repository.yt.testing_unofficial
+          localDir: './unofficial/repository.yt.testing_unofficial/'
+          remoteDir: '/root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial/'
           reverse: false
           options: '--verbose'
 
