@@ -26,7 +26,7 @@ jobs:
         run: |
           sudo apt-get update
           python -m pip install --upgrade pip
-          pip install lxml zipfile
+          pip install lxml
 
       - name: Checkout Official Add-on
         uses: actions/checkout@v4
