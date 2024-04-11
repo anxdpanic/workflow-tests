@@ -17,18 +17,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Release Status
-        id: release
-        run: |
-          version=${GITHUB_REF/refs\/tags\//}
-          if [[ $version == *[-+]@(alpha|beta|dev)*([.0-9a-z]) ]] ;
-          then
-            echo "pre-release=true" >> $GITHUB_OUTPUT
-          else
-            echo "pre-release=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Checkout Add-on
+      - name: Checkout Official Add-on
         uses: actions/checkout@v4
         with:
           repository: "anxdpanic/plugin.video.youtube"
@@ -55,7 +44,8 @@ jobs:
       - name: Copy Generator Script
         id: copy-gen-script
         run: |
-          cp  ${{ github.event.repository.name }}/.scripts/.* .
+          cp  ${{ github.event.repository.name }}/.scripts/.prepare_repository.py .
+          cp  ${{ github.event.repository.name }}/.scripts/.config.json .
 
       - name: Setup Python
         uses: actions/setup-python@v5
