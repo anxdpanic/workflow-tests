@@ -65,7 +65,7 @@ jobs:
           lftp -c "\
           set ssl:verify-certificate false; \
           set sftp:auto-confirm yes; \
-          open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} -p ${{ secrets.FTP_PORT }} ${{ secrets.FTP_SERVER }}; \
+          open --username ${{ secrets.FTP_USERNAME }} --password ${{ secrets.FTP_PASSWORD }} --port ${{ secrets.FTP_PORT }} ${{ secrets.FTP_SERVER }}; \
           mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_official ./official/repository.yt.testing_official; \
           mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial ./unofficial/repository.yt.testing_unofficial; \
           bye \
