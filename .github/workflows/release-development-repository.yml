@@ -105,5 +105,6 @@ jobs:
         run: |
           ls -la ./repository/official
           ls -la ./repository/official/zips
+          ls -la ./repository/official/zips/repository.yt.testing_official
           ls -la ./repository/unofficial          
           ls -la ./repository/unofficial/zips
