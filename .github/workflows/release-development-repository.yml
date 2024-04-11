@@ -73,8 +73,9 @@ jobs:
           set ssl:verify-certificate false; \
           set sftp:auto-confirm yes; \
           open ${{ secrets.SFTP }}; \
-          mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_official ./official/repository.yt.testing_official; \
-          mirror --verbose --use-pget-n=8 -c --verbose /root/anxdpanic/kodi/youtube/repository.yt.testing_unofficial ./unofficial_testing/repository.yt.testing_unofficial; \
+          cd /root/anxdpanic/kodi/youtube/; \
+          mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_official ./official/repository.yt.testing_official; \
+          mirror --verbose --use-pget-n=8 -c --verbose repository.yt.testing_unofficial ./unofficial_testing/repository.yt.testing_unofficial; \
           bye \
           "
 
@@ -101,7 +102,8 @@ jobs:
           set ssl:verify-certificate false; \
           set sftp:auto-confirm yes; \
           open ${{ secrets.SFTP }}; \
-          mirror --verbose --use-pget-n=8 -c --reverse --verbose /root/anxdpanic/kodi/youtube/official_testing ./repository/official; \
-          mirror --verbose --use-pget-n=8 -c --reverse --verbose /root/anxdpanic/kodi/youtube/unofficial_testing ./repository/unofficial_testing; \
+          cd /root/anxdpanic/kodi/youtube/; \
+          mirror --verbose --use-pget-n=8 -c --reverse --verbose official_testing ./repository/official; \
+          mirror --verbose --use-pget-n=8 -c --reverse --verbose unofficial_testing ./repository/unofficial_testing; \
           bye \
           "
