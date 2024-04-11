@@ -1,0 +1,67 @@
+# Based on https://github.com/im85288/service.upnext/blob/master/.github/workflows/release.yml
+name: Make Release
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+      - '*-dev'
+
+# ${{ github.event.repository.name }}
+jobs:
+  repo-gen:
+    # if: github.repository == 'anxdpanic/plugin.video.youtube' || github.event_name == 'workflow_dispatch'
+    name: Generate development repository and upload to mirrors
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Release Status
+        id: release
+        run: |
+          version=${GITHUB_REF/refs\/tags\//}
+          if [[ $version == *[-+]@(alpha|beta|dev)*([.0-9a-z]) ]] ;
+          then
+            echo "pre-release=true" >> $GITHUB_OUTPUT
+          else
+            echo "pre-release=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout Add-on
+        uses: actions/checkout@v4
+        with:
+          repository: "anxdpanic/youtube"
+          path: ./official/plugin.video.youtube
+          ref: "master"
+
+      - name: Checkout Unofficial Add-on
+        uses: actions/checkout@v4
+        with:
+          repository: "anxdpanic/youtube"
+          path: ./unofficial/plugin.video.youtube
+          ref: "nexus-unofficial"
+
+      - name: Checkout Add-on
+        uses: actions/checkout@v4
+        with:
+          path: ${{ github.event.repository.name }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+
+      # cp  ./official/plugin.video.youtube/.scripts/* .
+      - name: Copy Generator Script
+        id: copy-gen-script
+        run: |
+          cp  ./${{ github.event.repository.name }}/.scripts/* .
+
+      - name: Generate Repositories
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+        run: |
+          python .prepare_repository.py
+          ls -la ./official/plugin.video.youtube
+          ls -la ./unofficial/plugin.video.youtube
